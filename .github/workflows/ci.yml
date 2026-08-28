@@ -47,9 +47,8 @@ jobs:
   security:
     runs-on: ubuntu-latest
     steps:
-      # fetch-depth: 0 (full history) is required here -- gitleaks-action
-      # scans a commit range (git log before^..after) and fails with
-      # "stderr is not empty" / "failed to scan Git repository" against
+      # fetch-depth: 0 (full history) is required here -- the gitleaks step
+      # below scans the whole repo history, which needs more than
       # actions/checkout@v4's default shallow (depth-1) clone.
       - uses: actions/checkout@v4
         with:
@@ -77,10 +76,17 @@ jobs:
         run: pip-audit --skip-editable
         continue-on-error: true
 
+      # Run gitleaks directly rather than via gitleaks/gitleaks-action@v2:
+      # that action tries to scan only `git log before^..after` from the
+      # push event, which throws "fatal: ambiguous argument ...^..."
+      # whenever `before` is a repo's root commit (no parent) -- exactly
+      # what happens on a repository's first-ever push. Scanning full
+      # history directly sidesteps that edge case entirely and is cheap
+      # for a repo this size.
       - name: Secret scan (gitleaks)
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl -sL https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_linux_x64.tar.gz | tar xz gitleaks
+          ./gitleaks detect --source . --no-banner -v
 
   docker-build:
     runs-on: ubuntu-latest
