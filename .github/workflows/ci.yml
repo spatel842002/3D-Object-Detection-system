@@ -47,7 +47,13 @@ jobs:
   security:
     runs-on: ubuntu-latest
     steps:
+      # fetch-depth: 0 (full history) is required here -- gitleaks-action
+      # scans a commit range (git log before^..after) and fails with
+      # "stderr is not empty" / "failed to scan Git repository" against
+      # actions/checkout@v4's default shallow (depth-1) clone.
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
