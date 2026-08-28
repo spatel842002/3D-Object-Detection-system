@@ -1,0 +1,77 @@
+[project]
+name = "threed-od"
+version = "0.1.0"
+description = "3D Object Detection System: YOLO detection + monocular depth estimation + tracking + camera calibration for approximate 3D localization"
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+license = { text = "MIT" }
+authors = [{ name = "Shriya Patel" }]
+
+dependencies = [
+    "fastapi==0.141.1",
+    "uvicorn[standard]==0.52.4",
+    "pydantic==2.13.4",
+    "pydantic-settings==2.15.0",
+    "python-multipart==0.0.32",
+    "numpy==2.4.6",
+    "opencv-python-headless==4.14.0.94",
+    "torch==2.9.1",
+    "torchvision==0.24.1",
+    "ultralytics==8.4.130",
+    "timm==1.0.28",
+    "boto3==1.43.81",
+    "mlflow==2.22.5",
+    "prometheus-client==0.26.0",
+    "opentelemetry-sdk==1.44.0",
+    "opentelemetry-exporter-otlp==1.44.0",
+    "opentelemetry-instrumentation-fastapi==0.65b0",
+    "structlog==26.1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==8.4.2",
+    "pytest-cov==7.1.0",
+    "httpx==0.28.1",
+    "ruff==0.16.4",
+    "mypy==1.20.2",
+    "types-requests==2.33.0.20260712",
+    "pillow==12.3.0",
+]
+
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+# B008: FastAPI's Depends()-as-default-argument is the documented, intended
+# pattern (https://fastapi.tiangolo.com/tutorial/dependencies/), not a real bug.
+ignore = ["B008"]
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+disallow_untyped_defs = false
+warn_unused_ignores = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "model_download: requires downloading real model weights over the network",
+]
+addopts = "-ra"
+
+[tool.coverage.run]
+source = ["src/threed_od"]
+omit = ["*/threed_od/telemetry.py"]
+
+[tool.coverage.report]
+fail_under = 70

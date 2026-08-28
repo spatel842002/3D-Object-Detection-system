@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: threed-od-api
+  labels:
+    app: threed-od-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: threed-od-api
+  template:
+    metadata:
+      labels:
+        app: threed-od-api
+    spec:
+      containers:
+        - name: api
+          image: threed-od-api:latest
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: threed-od-config
+            - secretRef:
+                name: threed-od-secrets
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "1Gi"
+            limits:
+              cpu: "2"
+              memory: "3Gi"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 20
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10

@@ -1,0 +1,17 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+
+exporters:
+  debug:
+    verbosity: normal
+  # Add a production exporter here (e.g. datadog, azuremonitor, otlphttp
+  # pointed at a hosted backend) -- see docs/account-activation-checklist.md.
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      exporters: [debug]

@@ -1,0 +1,30 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+*.log
+
+# Model weights and downloaded artifacts (never commit binaries)
+*.pt
+*.pth
+*.onnx
+weights/
+data/
+mlruns/
+mlartifacts/
+
+# Coverage and test artifacts
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

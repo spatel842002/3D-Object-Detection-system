@@ -1,0 +1,15 @@
+{
+  "runs": 15,
+  "resolution": "640x480",
+  "device": "cpu",
+  "detector": "yolo:yolov8n.pt",
+  "depth_model": "MiDaS_small",
+  "python_version": "3.11.4",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "processor": "Intel64 Family 6 Model 186 Stepping 3, GenuineIntel",
+  "latency_ms_mean": 220.28,
+  "latency_ms_p50": 214.63,
+  "latency_ms_p95": 265.98,
+  "latency_ms_min": 199.23,
+  "latency_ms_max": 265.98
+}
